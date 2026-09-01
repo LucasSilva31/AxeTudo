@@ -1,30 +1,23 @@
 <?php
 
+require_once ".../app/DLL.php";
+
 session_start();
 
-$login = $_POST['login'];
-$senha = md5($_POST['senha']);
+extract($_POST);
 
-$arquivo = "logins/" . $login . ".dat";
+$senha = md5($senha);
 
-if (file_exists($arquivo)) {
+$sql_verifica = "SELECT * FROM logins WHERE login = '$login' and senha = '$senha'";
+$resultado = banco($server, $user, $password, $db, $sql_verifica);
+$linha = $resultado->fetch_assoc();
 
-    $dados = file($arquivo);
-
-    $senhaSalva = trim($dados[1]);
-
-    if ($senha == $senhaSalva) {
-
-        $_SESSION["usuario"] = $login;
-
-        header("Location: index.php");
-        exit;
-
-    }
-
+if ($linha) {
+    header("Location: index.php");
+}else{
+    header("Location: login.php");
 }
 
-header("Location: login.php");
 exit;
 
 ?>

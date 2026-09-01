@@ -1,25 +1,12 @@
 <?php
 
-$nome = $_POST['nome'];
-$cpf = $_POST['cpf'];
-$endereco = $_POST['endereco'];
-$bairro = $_POST['bairro'];
-$cep = $_POST['cep'];
-$cidade = $_POST['cidade'];
-$estado = $_POST['estado'];
+require_once ".../app/DLL.php";
 
-$arquivo = "usuarios/" . $cpf . ".dat";
+extract($_POST);
 
-$dados = "";
-$dados .= "Nome: $nome\n";
-$dados .= "CPF: $cpf\n";
-$dados .= "Endereco: $endereco\n";
-$dados .= "Bairro: $bairro\n";
-$dados .= "CEP: $cep\n";
-$dados .= "Cidade: $cidade\n";
-$dados .= "Estado: $estado\n";
+$sql = "INSERT INTO usuarios (nome, cpf, endereco, bairro, cep, cidade, estado) VALUES ('$nome','$cpf', '$endereco', '$bairro', '$cep', '$cidade', '$estado')";
 
-file_put_contents($arquivo, $dados);
+banco($server, $user, $password, $db, $sql);
 
 header("Location: cadastro2.php");
 

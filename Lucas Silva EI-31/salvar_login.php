@@ -1,16 +1,15 @@
 <?php
 
-$login = $_POST['login'];
-$senha = md5($_POST['senha']);
+require_once ".../app/DLL.php";
 
-$dados = "";
-$dados .= "Login: $login\n";
-$dados .= "$senha\n";
+extract($_POST);
 
-file_put_contents("logins/" . $login . ".dat", $dados);
+$senha = md5($senha);
 
-header("Location: login.php");
+$sql = "INSERT INTO logins (login, senha) VALUES ('$login', '$senha')";
 
-exit;
+banco($server, $user, $password, $db, $sql);
+
+header("Location: cadastro2.php");
 
 ?>
