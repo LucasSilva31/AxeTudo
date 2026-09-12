@@ -1,12 +1,14 @@
 <?php
 
-require_once ".../app/DLL.php";
+include "../app/cons.php";
+require_once "../app/DLL.php";
 
 extract($_POST);
 
-$sql = "INSERT INTO usuarios (nome, cpf, endereco, bairro, cep, cidade, estado) VALUES ('$nome','$cpf', '$endereco', '$bairro', '$cep', '$cidade', '$estado')";
+$consulta = "INSERT INTO usuarios (id, nome, cpf, endereco, bairro,cep, estado) VALUES (NULL, '$nome', '$cpf', '$endereco', '$bairro','$cep', '$estado')";
+banco($server, $user, $password, $db, $consulta);
 
-banco($server, $user, $password, $db, $sql);
+
 
 header("Location: cadastro2.php");
 
