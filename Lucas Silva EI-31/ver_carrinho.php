@@ -37,7 +37,8 @@ if (!isset($_SESSION["carrinho"])) {
 
                 <div class="card">
 
-                    <h3><?= $produto ?></h3>
+                    <h3><?= $produto['produto'] ?></h3>
+                    <p>R$ <?= $produto['preco'] ?></p>
 
                     <a class="cancelar" href="remover.php?indice=<?= $indice ?>">
                         Remover

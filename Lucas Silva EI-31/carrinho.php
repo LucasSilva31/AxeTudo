@@ -9,8 +9,9 @@ if (!isset($_SESSION["carrinho"])) {
 if (isset($_GET["produto"])) {
 
     $produto = $_GET["produto"];
+    $preco = $_GET["preco"];
 
-    $_SESSION["carrinho"][] = $produto;
+    $_SESSION["carrinho"][] = ["produto"=>$produto,"preco"=>$preco];
 }
 
 header("Location: index.php");

@@ -21,12 +21,20 @@ $produtos = $_SESSION["carrinho"];
 $numero = rand(1000, 9999);
 
 $data = date("Y-m-d");
+$total = 0;
 
-$consulta = "INSERT INTO vendidos (n_venda, usuario, data) VALUES ('$numero', '$usuario','$data')";
+foreach ($produtos as $produto) {
+    $preco = $produto['preco'];
+    $total += $preco;
+}
+
+$consulta = "INSERT INTO vendidos (n_venda, usuario, data, total) VALUES ('$numero', '$usuario','$data', '$total')";
 banco($server, $user, $password, $db, $consulta);
 
 foreach ($produtos as $produto) {
-    $consulta = "INSERT INTO itens_vendidos (n_venda, produto) VALUES ('$numero', '$produto')";
+    $nome = $produto['produto'];
+    $preco = $produto['preco'];
+    $consulta = "INSERT INTO itens_vendidos (n_venda, produto, preco) VALUES ('$numero', '$nome', '$preco')";
     banco($server, $user, $password, $db, $consulta);
 }
 
@@ -68,10 +76,11 @@ $_SESSION["carrinho"] = [];
 
             <?php foreach ($produtos as $produto) { ?>
 
-                <p><?= $produto ?></p>
+                <p><?= $produto['produto'] ?> - R$ <?= $produto['preco'] ?></p>
 
             <?php } ?>
-
+            <br>
+            <p>Total: R$ <?= number_format($total, 2) ?> </p>
         </div>
 
         <a class="voltar" href="index.php">

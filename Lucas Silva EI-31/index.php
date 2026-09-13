@@ -52,7 +52,7 @@ session_start();
                 <h3>Colar de Contas</h3>
                 <p>Colar tradicional artesanal</p>
                 <span class="price">R$ 49,90</span>
-                <a class="btn" href="carrinho.php?produto=Colar de Contas">Comprar</a>
+                <a class="btn" href="carrinho.php?produto=Colar de Contas&preco=49.90">Comprar</a>
             </div>
 
             <div class="card">
@@ -60,7 +60,7 @@ session_start();
                 <h3>Guia Proteção</h3>
                 <p>Amuleto de proteção espiritual</p>
                 <span class="price">R$ 39,90</span>
-                <a class="btn" href="carrinho.php?produto=Guia Proteção">Comprar</a>
+                <a class="btn" href="carrinho.php?produto=Guia Proteção&preco=39.90">Comprar</a>
             </div>
 
             <div class="card">
@@ -68,7 +68,7 @@ session_start();
                 <h3>Pulseira Axé</h3>
                 <p>Pulseira simbólica artesanal</p>
                 <span class="price">R$ 29,90</span>
-                <a class="btn" href="carrinho.php?produto=Guia Proteção"">Comprar</a>
+                <a class="btn" href="carrinho.php?produto=Pulseira Axé&preco=29.90">Comprar</a>
             </div>
 
             <div class="card">
@@ -76,7 +76,7 @@ session_start();
                 <h3>Pingente Odum</h3>
                 <p>Pingente de proteção e fé</p>
                 <span class="price">R$ 59,90</span>
-                <a class="btn" href="carrinho.php?produto=Pingente Odum">Comprar</a>
+                <a class="btn" href="carrinho.php?produto=Pingente Odum&preco=59.90">Comprar</a>
             </div>
 
         </div>
