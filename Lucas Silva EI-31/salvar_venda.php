@@ -1,5 +1,8 @@
 <?php
 
+include "app/cons.php";
+require_once "app/DLL.php";
+
 session_start();
 
 if (!isset($_SESSION["usuario"])) {
@@ -17,18 +20,15 @@ $produtos = $_SESSION["carrinho"];
 
 $numero = rand(1000, 9999);
 
-$data = date("d/m/Y");
+$data = date("Y-m-d");
 
-$dados = "Venda: $numero\n";
-$dados .= "Usuário: $usuario\n";
-$dados .= "Data: $data\n\n";
+$consulta = "INSERT INTO vendidos (n_venda, usuario, data) VALUES ('$numero', '$usuario','$data')";
+banco($server, $user, $password, $db, $consulta);
 
 foreach ($produtos as $produto) {
-
-    $dados .= "Produto: $produto\n";
+    $consulta = "INSERT INTO itens_vendidos (n_venda, produto) VALUES ('$numero', '$produto')";
+    banco($server, $user, $password, $db, $consulta);
 }
-
-file_put_contents("vendas/$numero.dat", $dados);
 
 $_SESSION["carrinho"] = [];
 

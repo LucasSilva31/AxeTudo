@@ -1,7 +1,7 @@
 <?php
 
-include "../app/cons.php";
-require_once "../app/DLL.php";
+include "app/cons.php";
+require_once "app/DLL.php";
 
 session_start();
 
