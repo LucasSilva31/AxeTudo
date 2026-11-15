@@ -28,7 +28,7 @@
 
         <div class="auth-panel">
 
-            <form class="auth-form" action="processa_login.php" method="POST">
+            <form class="auth-form" action="processamento/processa_login.php" method="POST">
 
                 <h2>ENTRAR</h2>
 
@@ -45,6 +45,7 @@
                 <button type="submit">ACESSAR SISTEMA</button>
 
                 <a class="link" href="cadastro1.php">Criar nova conta</a>
+                <a href="recuperacao/recuperar.php">Esqueceu sua senha?</a>
 
             </form>
 

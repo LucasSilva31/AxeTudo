@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+include "app/cons.php";
+require_once "app/DLL.php";
+
+$sql = "SELECT * FROM produtos";
+$resultado = banco($server, $user, $password, $db, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -29,8 +35,8 @@ session_start();
             <?php if (isset($_SESSION["usuario"])) { ?>
 
                 <span>Olá, <?php echo $_SESSION["usuario"]; ?></span>
-                <a href="ver_carrinho.php">Carrinho</a>
-                <a href="sair.php">Sair</a>
+                <a href="carrinho/ver_carrinho.php">Carrinho</a>
+                <a href="processamento/sair.php">Sair</a>
 
             <?php } else { ?>
 
@@ -47,39 +53,27 @@ session_start();
 
         <div class="grid">
 
-            <div class="card">
-                <img class="img" src="img/colar.jpeg">
-                <h3>Colar de Contas</h3>
-                <p>Colar tradicional artesanal</p>
-                <span class="price">R$ 49,90</span>
-                <a class="btn" href="carrinho.php?produto=Colar de Contas&preco=49.90">Comprar</a>
-            </div>
+    <?php while ($produto = $resultado->fetch_assoc()) { ?>
 
-            <div class="card">
-                <img class="img" src="img/guia.jpeg">
-                <h3>Guia Proteção</h3>
-                <p>Amuleto de proteção espiritual</p>
-                <span class="price">R$ 39,90</span>
-                <a class="btn" href="carrinho.php?produto=Guia Proteção&preco=39.90">Comprar</a>
-            </div>
+        <div class="card">
+            <img class="img" src="<?php echo $produto['imagem']; ?>">
 
-            <div class="card">
-                <img class="img" src="img/pulseira.jpeg">
-                <h3>Pulseira Axé</h3>
-                <p>Pulseira simbólica artesanal</p>
-                <span class="price">R$ 29,90</span>
-                <a class="btn" href="carrinho.php?produto=Pulseira Axé&preco=29.90">Comprar</a>
-            </div>
+            <h3><?php echo $produto['nome']; ?></h3>
 
-            <div class="card">
-                <img class="img" src="img/pingente.jpeg">
-                <h3>Pingente Odum</h3>
-                <p>Pingente de proteção e fé</p>
-                <span class="price">R$ 59,90</span>
-                <a class="btn" href="carrinho.php?produto=Pingente Odum&preco=59.90">Comprar</a>
-            </div>
+            <p><?php echo $produto['descricao']; ?></p>
 
+            <span class="price">
+                R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
+            </span>
+
+            <a class="btn" href="carrinho/carrinho.php?produto=<?php echo urlencode($produto['nome']); ?>&preco=<?php echo $produto['preco']; ?>">
+                Comprar
+            </a>
         </div>
+
+    <?php } ?>
+
+</div>
 
     </main>
 

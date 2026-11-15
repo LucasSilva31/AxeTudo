@@ -27,7 +27,7 @@
 
         <div class="auth-panel">
 
-            <form class="auth-form" action="salvar_login.php" method="POST">
+            <form class="auth-form" action="processamento/salvar_login.php" method="POST">
 
                 <h2>CRIAR ACESSO</h2>
 

@@ -26,7 +26,7 @@
 
         <div class="auth-panel">
 
-            <form class="auth-form" action="salvar_usuario.php" method="POST">
+            <form class="auth-form" action="processamento/salvar_usuario.php" method="POST">
 
                 <h2>DADOS PESSOAIS</h2>
 
@@ -38,6 +38,11 @@
                 <div class="input-group">
                     <label>CPF</label>
                     <input type="text" name="cpf" required>
+                </div>
+
+                <div class="input-group">
+                    <label>E-MAIL</label>
+                    <input type="email" name="email" required>
                 </div>
 
                 <div class="input-group">
