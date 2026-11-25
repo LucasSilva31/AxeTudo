@@ -13,7 +13,10 @@ if ($senha != $confirmar) {
 
 } else {
 
-    $sql = "SELECT * FROM logins WHERE token_recuperacao = '$token' AND expiracao_token > NOW()";
+    $sql = "SELECT * FROM logins
+            WHERE token_recuperacao = '$token'
+            AND expiracao_token > NOW()";
+
     $resultado = banco($server, $user, $password, $db, $sql);
     $usuario = $resultado->fetch_assoc();
 
@@ -21,15 +24,19 @@ if ($senha != $confirmar) {
 
         $senha = password_hash($senha, PASSWORD_DEFAULT);
 
-        $sql = "UPDATE logins SET senha = '$senha', token_recuperacao = NULL, expiracao_token = NULL WHERE id = ".$usuario['id'];
+        $sql = "UPDATE logins
+                SET senha = '$senha',
+                    token_recuperacao = NULL,
+                    expiracao_token = NULL
+                WHERE id_login = ".$usuario['id_login'];
+
         banco($server, $user, $password, $db, $sql);
 
-        echo "Senha alterada com sucesso!";
-        
-        header("location:../login.php");
+        header("Location: ../login.php");
         exit;
 
     } else {
+
         echo "Link inválido ou expirado.";
 
     }

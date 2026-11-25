@@ -24,11 +24,11 @@ if ($usuario) {
     $sql = "UPDATE logins
             SET token_recuperacao = '$token',
                 expiracao_token = '$expiracao'
-            WHERE id = ".$usuario['id'];
+            WHERE id_login = ".$usuario['id_login'];
 
     banco($server, $user, $password, $db, $sql);
 
-    $link = "http://localhost/AxeTudo/Lucas%20Silva%20EI-31/recuperacao/nova_senha.php?token=" . $token;
+    $link = "http://localhost/Axetudo2/recuperacao/nova_senha.php?token=" . $token;
 
     $mail = new PHPMailer(true);
 

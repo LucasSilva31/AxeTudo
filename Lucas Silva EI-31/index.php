@@ -53,27 +53,27 @@ $resultado = banco($server, $user, $password, $db, $sql);
 
         <div class="grid">
 
-    <?php while ($produto = $resultado->fetch_assoc()) { ?>
+            <?php while ($produto = $resultado->fetch_assoc()) { ?>
 
-        <div class="card">
-            <img class="img" src="<?php echo $produto['imagem']; ?>">
+                <div class="card">
+                    <img class="img" src="<?php echo $produto['imagem']; ?>">
 
-            <h3><?php echo $produto['nome']; ?></h3>
+                    <h3><?php echo $produto['nome']; ?></h3>
 
-            <p><?php echo $produto['descricao']; ?></p>
+                    <p><?php echo $produto['descricao']; ?></p>
 
-            <span class="price">
-                R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
-            </span>
+                    <span class="price">
+                        R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
+                    </span>
 
-            <a class="btn" href="carrinho/carrinho.php?id=<?php echo $produto['id']; ?>">
-                Comprar
-            </a>
+                    <a class="btn" href="carrinho/carrinho.php?id=<?php echo $produto['id_produto']; ?>">
+                        Comprar
+                    </a>
+                </div>
+
+            <?php } ?>
+
         </div>
-
-    <?php } ?>
-
-</div>
 
     </main>
 

@@ -12,7 +12,7 @@ if (!isset($_SESSION['id_usuario'])) {
 
 $id_usuario = $_SESSION['id_usuario'];
 
-$consulta = "SELECT carrinhos.id AS id_carrinho FROM carrinhos WHERE id_usuario = '$id_usuario'";
+$consulta = "SELECT itens_carrinho.id_item_carrinho AS id_carrinho FROM carrinhos WHERE id_usuario = '$id_usuario'";
 
 $resultado = banco($server, $user, $password, $db, $consulta);
 $carrinho = $resultado->fetch_assoc();
@@ -24,7 +24,7 @@ if ($carrinho) {
 
     $consulta = "SELECT itens_carrinho.id, produtos.nome, produtos.preco, itens_carrinho.quantidade FROM itens_carrinho
                  INNER JOIN produtos
-                 ON itens_carrinho.id_produto = produtos.id
+                 ON itens_carrinho.id_produto = produtos.id_produto
                  WHERE itens_carrinho.id_carrinho = '$id_carrinho'";
 
     $itens = banco($server, $user, $password, $db, $consulta);
@@ -60,7 +60,7 @@ if ($carrinho) {
             <p>Preço: R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
             <p>Quantidade: <?= $produto['quantidade'] ?></p>
 
-            <a class="cancelar" href="remover.php?id=<?= $produto['id'] ?>">
+            <a class="cancelar" href="remover.php?id=<?= $produto['id_item_carrinho'] ?>">
                 Remover
             </a>
         </div>

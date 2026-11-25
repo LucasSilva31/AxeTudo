@@ -1,4 +1,3 @@
-
 <?php
 include "../app/cons.php";
 require_once "../app/DLL.php";
@@ -13,7 +12,9 @@ if (!isset($_SESSION['id_usuario'])) {
 $id_usuario = $_SESSION['id_usuario'];
 $usuario = $_SESSION['usuario'];
 
-$consulta = "SELECT id FROM carrinhos WHERE id_usuario = '$id_usuario'";
+$consulta = "SELECT id_carrinho FROM carrinhos
+             WHERE id_usuario = '$id_usuario'";
+
 $resultado = banco($server, $user, $password, $db, $consulta);
 $carrinho = $resultado->fetch_assoc();
 
@@ -21,13 +22,13 @@ if (!$carrinho) {
     die("Carrinho não encontrado.");
 }
 
-$id_carrinho = $carrinho['id'];
+$id_carrinho = $carrinho['id_carrinho'];
 
-$consulta = "SELECT produtos.id, produtos.nome, produtos.preco,
+$consulta = "SELECT produtos.id_produto, produtos.nome, produtos.preco,
                     itens_carrinho.quantidade
              FROM itens_carrinho
              INNER JOIN produtos
-             ON itens_carrinho.id_produto = produtos.id
+             ON itens_carrinho.id_produto = produtos.id_produto
              WHERE itens_carrinho.id_carrinho = '$id_carrinho'";
 
 $resultado = banco($server, $user, $password, $db, $consulta);
@@ -49,17 +50,21 @@ $consulta = "INSERT INTO vendidos (id_usuario, data, total)
 
 banco($server, $user, $password, $db, $consulta);
 
-$consulta = "SELECT id FROM vendidos
+$consulta = "SELECT id_venda FROM vendidos
              WHERE id_usuario = '$id_usuario'
-             ORDER BY id DESC LIMIT 1";
+             ORDER BY id_venda DESC LIMIT 1";
 
 $resultado = banco($server, $user, $password, $db, $consulta);
 $venda = $resultado->fetch_assoc();
 
-$id_venda = $venda['id'];
+if (!$venda) {
+    die("Não foi possível registrar a venda.");
+}
+
+$id_venda = $venda['id_venda'];
 
 foreach ($produtos as $produto) {
-    $id_produto = $produto['id'];
+    $id_produto = $produto['id_produto'];
     $nome = $produto['nome'];
     $preco = $produto['preco'];
     $quantidade = $produto['quantidade'];
