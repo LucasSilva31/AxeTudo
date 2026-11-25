@@ -1,12 +1,36 @@
-<?php
 
+<?php
 session_start();
 
-if (!isset($_SESSION["carrinho"])) {
-    $_SESSION["carrinho"] = [];
+include "../app/cons.php";
+require_once "../app/DLL.php";
+
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ../login.php");
+    exit;
 }
 
+$id_usuario = $_SESSION['id_usuario'];
+
+$consulta = "SELECT carrinhos.id AS id_carrinho FROM carrinhos WHERE id_usuario = '$id_usuario'";
+
+$resultado = banco($server, $user, $password, $db, $consulta);
+$carrinho = $resultado->fetch_assoc();
+
+$itens = false;
+
+if ($carrinho) {
+    $id_carrinho = $carrinho['id_carrinho'];
+
+    $consulta = "SELECT itens_carrinho.id, produtos.nome, produtos.preco, itens_carrinho.quantidade FROM itens_carrinho
+                 INNER JOIN produtos
+                 ON itens_carrinho.id_produto = produtos.id
+                 WHERE itens_carrinho.id_carrinho = '$id_carrinho'";
+
+    $itens = banco($server, $user, $password, $db, $consulta);
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -24,32 +48,26 @@ if (!isset($_SESSION["carrinho"])) {
 
         <h2>Seu Carrinho</h2>
 
-        <?php
-
-        if (count($_SESSION["carrinho"]) == 0) {
-
+        
+    <?php
+        if (!$itens || $itens->num_rows == 0) {
             echo "<p>Carrinho vazio</p>";
-
         } else {
+            while ($produto = $itens->fetch_assoc()) {
+    ?>
+        <div class="card">
+            <h3><?= $produto['nome'] ?></h3>
+            <p>Preço: R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+            <p>Quantidade: <?= $produto['quantidade'] ?></p>
 
-            foreach ($_SESSION["carrinho"] as $indice => $produto) {
-        ?>
-
-                <div class="card">
-
-                    <h3><?= $produto['produto'] ?></h3>
-                    <p>R$ <?= $produto['preco'] ?></p>
-
-                    <a class="cancelar" href="remover.php?indice=<?= $indice ?>">
-                        Remover
-                    </a>
-
-                </div>
-
-        <?php
-            }
+            <a class="cancelar" href="remover.php?id=<?= $produto['id'] ?>">
+                Remover
+            </a>
+        </div>
+    <?php
         }
-        ?>
+    }
+    ?>
 
         <br>
 

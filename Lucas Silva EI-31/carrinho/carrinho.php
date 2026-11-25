@@ -1,10 +1,12 @@
+
 <?php
+session_start();
 
 include "../app/cons.php";
 require_once "../app/DLL.php";
 
-if (!isset($_SESSION['id_usuario'])){
-    header("location:../login.php");
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: ../login.php");
     exit;
 }
 
@@ -24,4 +26,29 @@ if (!$linha) {
     $linha = $resultado->fetch_assoc();
 }
 
+$id_carrinho = $linha['id'];
+
+$consulta = "SELECT * FROM produtos WHERE id = '$id_produto'";
+$resultado = banco($server, $user, $password, $db, $consulta);
+$produto = $resultado->fetch_assoc();
+
+if ($produto) {
+    $consulta = "SELECT id, quantidade FROM itens_carrinho WHERE id_carrinho = '$id_carrinho' AND id_produto = '$id_produto'";
+
+    $resultado = banco($server, $user, $password, $db, $consulta);
+    $item = $resultado->fetch_assoc();
+
+    if ($item) {
+        $quantidade = $item['quantidade'] + 1;
+
+        $consulta = "UPDATE itens_carrinho SET quantidade = '$quantidade' WHERE id = '".$item['id']."'";
+    } else {
+        $consulta = "INSERT INTO itens_carrinho (id_carrinho, id_produto, quantidade) VALUES ('$id_carrinho', '$id_produto', 1)";
+    }
+
+    banco($server, $user, $password, $db, $consulta);
+}
+
+header("Location: ver_carrinho.php");
+exit;
 ?>

@@ -1,64 +1,93 @@
-<?php
 
+<?php
 include "../app/cons.php";
 require_once "../app/DLL.php";
 
 session_start();
 
-if (!isset($_SESSION["usuario"])) {
+if (!isset($_SESSION['id_usuario'])) {
     header("Location: ../login.php");
     exit;
 }
 
-if (!isset($_SESSION["carrinho"])) {
-    $_SESSION["carrinho"] = [];
+$id_usuario = $_SESSION['id_usuario'];
+$usuario = $_SESSION['usuario'];
+
+$consulta = "SELECT id FROM carrinhos WHERE id_usuario = '$id_usuario'";
+$resultado = banco($server, $user, $password, $db, $consulta);
+$carrinho = $resultado->fetch_assoc();
+
+if (!$carrinho) {
+    die("Carrinho não encontrado.");
 }
 
-$usuario = $_SESSION["usuario"];
+$id_carrinho = $carrinho['id'];
 
-$produtos = $_SESSION["carrinho"];
+$consulta = "SELECT produtos.id, produtos.nome, produtos.preco,
+                    itens_carrinho.quantidade
+             FROM itens_carrinho
+             INNER JOIN produtos
+             ON itens_carrinho.id_produto = produtos.id
+             WHERE itens_carrinho.id_carrinho = '$id_carrinho'";
 
-$numero = rand(1000, 9999);
+$resultado = banco($server, $user, $password, $db, $consulta);
 
-$data = date("Y-m-d");
+$produtos = [];
 $total = 0;
 
-foreach ($produtos as $produto) {
-    $preco = $produto['preco'];
-    $total += $preco;
+while ($produto = $resultado->fetch_assoc()) {
+    $produtos[] = $produto;
+    $total += $produto['preco'] * $produto['quantidade'];
 }
 
-$consulta = "INSERT INTO vendidos (n_venda, usuario, data, total) VALUES ('$numero', '$usuario','$data', '$total')";
+if (count($produtos) == 0) {
+    die("Carrinho vazio.");
+}
+
+$consulta = "INSERT INTO vendidos (id_usuario, data, total)
+             VALUES ('$id_usuario', NOW(), '$total')";
+
 banco($server, $user, $password, $db, $consulta);
 
+$consulta = "SELECT id FROM vendidos
+             WHERE id_usuario = '$id_usuario'
+             ORDER BY id DESC LIMIT 1";
+
+$resultado = banco($server, $user, $password, $db, $consulta);
+$venda = $resultado->fetch_assoc();
+
+$id_venda = $venda['id'];
+
 foreach ($produtos as $produto) {
-    $nome = $produto['produto'];
+    $id_produto = $produto['id'];
+    $nome = $produto['nome'];
     $preco = $produto['preco'];
-    $consulta = "INSERT INTO itens_vendidos (n_venda, produto, preco) VALUES ('$numero', '$nome', '$preco')";
+    $quantidade = $produto['quantidade'];
+
+    $consulta = "INSERT INTO itens_vendidos
+                 (id_venda, id_produto, nome_produto, preco, quantidade)
+                 VALUES ('$id_venda', '$id_produto', '$nome',
+                         '$preco', '$quantidade')";
+
     banco($server, $user, $password, $db, $consulta);
 }
 
-$_SESSION["carrinho"] = [];
+$consulta = "DELETE FROM itens_carrinho
+             WHERE id_carrinho = '$id_carrinho'";
 
+banco($server, $user, $password, $db, $consulta);
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-
     <meta charset="UTF-8">
-
     <title>Compra Finalizada</title>
-
     <link rel="stylesheet" href="../css/style.css">
-
 </head>
 
 <body class="confirmacao-body">
-
     <div class="confirmacao-box">
-
         <h1>COMPRA FINALIZADA</h1>
 
         <p class="mensagem">
@@ -67,28 +96,24 @@ $_SESSION["carrinho"] = [];
         </p>
 
         <div class="info-compra">
-
-            <p><strong>Pedido:</strong> #<?= $numero ?></p>
-
-            <p><strong>Data:</strong> <?= $data ?></p>
+            <p><strong>Pedido:</strong> #<?= $id_venda ?></p>
+            <p><strong>Data:</strong> <?= date("d/m/Y") ?></p>
 
             <br>
 
             <?php foreach ($produtos as $produto) { ?>
-
-                <p><?= $produto['produto'] ?> - R$ <?= $produto['preco'] ?></p>
-
+                <p>
+                    <?= $produto['nome'] ?>
+                    (<?= $produto['quantidade'] ?>x)
+                    - R$ <?= number_format($produto['preco'], 2, ',', '.') ?>
+                </p>
             <?php } ?>
+
             <br>
-            <p>Total: R$ <?= number_format($total, 2) ?> </p>
+            <p>Total: R$ <?= number_format($total, 2, ',', '.') ?></p>
         </div>
 
-        <a class="voltar" href="../index.php">
-            Voltar para loja
-        </a>
-
+        <a class="voltar" href="../index.php">Voltar para loja</a>
     </div>
-
 </body>
-
 </html>
