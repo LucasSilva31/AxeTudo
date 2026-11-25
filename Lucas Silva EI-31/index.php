@@ -66,7 +66,7 @@ $resultado = banco($server, $user, $password, $db, $sql);
                 R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
             </span>
 
-            <a class="btn" href="carrinho/carrinho.php?produto=<?php echo urlencode($produto['nome']); ?>&preco=<?php echo $produto['preco']; ?>">
+            <a class="btn" href="carrinho/carrinho.php?id=<?php echo $produto['id']; ?>">
                 Comprar
             </a>
         </div>

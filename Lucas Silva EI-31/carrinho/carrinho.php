@@ -1,21 +1,27 @@
 <?php
 
-session_start();
+include "../app/cons.php";
+require_once "../app/DLL.php";
 
-if (!isset($_SESSION["carrinho"])) {
-    $_SESSION["carrinho"] = [];
+if (!isset($_SESSION['id_usuario'])){
+    header("location:../login.php");
+    exit;
 }
 
-if (isset($_GET["produto"])) {
+$id_usuario = $_SESSION['id_usuario'];
+$id_produto = $_GET['id'];
 
-    $produto = $_GET["produto"];
-    $preco = $_GET["preco"];
+$consulta = "SELECT id FROM carrinhos WHERE id_usuario = '$id_usuario'";
+$resultado = banco($server, $user, $password, $db, $consulta);
+$linha = $resultado->fetch_assoc();
 
-    $_SESSION["carrinho"][] = ["produto"=>$produto,"preco"=>$preco];
+if (!$linha) {
+    $consulta = "INSERT INTO carrinhos (id_usuario) VALUES ('$id_usuario')";
+    banco($server, $user, $password, $db, $consulta);
+
+    $consulta = "SELECT id FROM carrinhos WHERE id_usuario = '$id_usuario'";
+    $resultado = banco($server, $user, $password, $db, $consulta);
+    $linha = $resultado->fetch_assoc();
 }
-
-header("Location: ../index.php");
-
-exit;
 
 ?>
