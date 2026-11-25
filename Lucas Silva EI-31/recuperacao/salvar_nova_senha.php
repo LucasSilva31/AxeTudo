@@ -14,25 +14,22 @@ if ($senha != $confirmar) {
 } else {
 
     $sql = "SELECT * FROM logins WHERE token_recuperacao = '$token' AND expiracao_token > NOW()";
-
     $resultado = banco($server, $user, $password, $db, $sql);
-
     $usuario = $resultado->fetch_assoc();
 
     if ($usuario) {
 
-        $senha = md5($senha);
+        $senha = password_hash($senha, PASSWORD_DEFAULT);
 
         $sql = "UPDATE logins SET senha = '$senha', token_recuperacao = NULL, expiracao_token = NULL WHERE id = ".$usuario['id'];
-
         banco($server, $user, $password, $db, $sql);
 
         echo "Senha alterada com sucesso!";
+        
         header("location:../login.php");
         exit;
 
     } else {
-
         echo "Link inválido ou expirado.";
 
     }
